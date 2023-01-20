@@ -1,4 +1,3 @@
-
 from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import (
@@ -10,6 +9,7 @@ from django.contrib.auth import password_validation
 from datetime import datetime
 from django.contrib.auth.hashers import make_password, check_password
 import uuid
+
 # Create your models here.
 
 
@@ -57,14 +57,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     This class is represent custom User model.
     """
 
-    email = models.EmailField(
-        unique=True, verbose_name="Email", primary_key=True)
+    email = models.EmailField(unique=True, verbose_name="Email", primary_key=True)
 
     emp_name = models.CharField(max_length=100)
     is_staff = models.BooleanField(default=False, verbose_name="Staff")
     is_active = models.BooleanField(default=True, verbose_name="Active")
-    is_superuser = models.BooleanField(
-        default=False, verbose_name="Superuser")
+    is_superuser = models.BooleanField(default=False, verbose_name="Superuser")
 
     objects = CustomUserManager()
 
@@ -82,6 +80,7 @@ class Holiday(models.Model):
     email = models.ForeignKey("User", on_delete=models.CASCADE)
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
+    colour = models.CharField(max_length=100)
 
     def __str__(self):
         return self.email.email
