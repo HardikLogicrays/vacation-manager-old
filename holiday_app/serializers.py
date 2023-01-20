@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User, Holiday
-from datetime import datetime
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -71,29 +72,51 @@ class HolidayCreateSerializer(serializers.ModelSerializer):
 
         if end_date == None or end_date == "":
             raise serializers.ValidationError("This field is required.")
+
+        current_date = date.today()
+
+        if (start_date < current_date) and (end_date < current_date):
+            raise serializers.ValidationError("Past Dates are not alllowed.")
+        if start_date < current_date:
+            raise serializers.ValidationError("Past Date is not alllowed.")
+        if end_date < current_date:
+            raise serializers.ValidationError("Past Date is not alllowed.")
+
+        if start_date > end_date:
+            raise serializers.ValidationError(
+                "Ending Date should come after Starting Date."
+            )
+
+        # 2 Month Date Validation
+
+        date_after_2_months = current_date + relativedelta(months=+2)
+
+        if (start_date > date_after_2_months) and (end_date > date_after_2_months):
+            raise serializers.ValidationError("Dates after 2 months are not allowed.")
+        if start_date > date_after_2_months:
+            raise serializers.ValidationError("Date after 2 months is allowed.")
+        if end_date > date_after_2_months:
+            raise serializers.ValidationError("Date after 2 months is not allowed.")
+
         return attrs
 
     def create(self, validated_data):
 
         user = self.context["request"].user
+      
+
         import random
 
-        
-        import random
-        random_number = random.randint(0,16777215)
+        random_number = random.randint(0, 16777215)
         hex_number = str(hex(random_number))
-        hex_number ='#'+ hex_number[2:]
+        hex_number = "#" + hex_number[2:]
 
-
-        print(hex_number)
-
-        print(hex_number, "COLOUR...........")
         create_request = Holiday.objects.create(
             email=user,
             title=validated_data["title"],
             start_date=validated_data["start_date"],
             end_date=validated_data["end_date"],
-            colour=hex_number,
+            color=hex_number
         )
 
         create_request.save()
@@ -104,7 +127,7 @@ class HolidayCreateSerializer(serializers.ModelSerializer):
 class HolidayGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Holiday
-        fields = ["event_id", "title", "start_date", "end_date", "colour"]
+        fields = ["event_id", "title", "start_date", "end_date", "color"]
 
 
 class HolidayGetFilterSerializer(serializers.Serializer):
@@ -122,8 +145,3 @@ class HolidayGetFilterSerializer(serializers.Serializer):
 
         return attrs
 
-
-class DummyDataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Holiday
-        fields = ["event_id", "title", "start_date", "end_date"]

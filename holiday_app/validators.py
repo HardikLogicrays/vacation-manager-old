@@ -3,7 +3,7 @@ from datetime import datetime
 
 def date_validator(start_dt=None, end_dt=None):
 
-    FORMAT = "%Y-%m-%d %H:%M:%S"
+    FORMAT = "%Y-%m-%d"
     res = True
 
     dict1 = {}
@@ -23,8 +23,8 @@ def date_validator(start_dt=None, end_dt=None):
             res = False
             errors["end_date"] = ["End Date not valid format."]
 
-    start_dt = datetime.strptime(start_dt, "%Y-%m-%d %H:%M:%S")
-    end_dt = datetime.strptime(end_dt, "%Y-%m-%d %H:%M:%S")
+    start_dt = datetime.strptime(start_dt, "%Y-%m-%d")
+    end_dt = datetime.strptime(end_dt, "%Y-%m-%d")
     if start_dt > end_dt:
         errors["start_date"] = ["Enter Valid Start date and End date."]
 

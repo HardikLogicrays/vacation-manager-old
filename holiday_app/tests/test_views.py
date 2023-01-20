@@ -19,8 +19,8 @@ class TestViews(TestSetUp):
 
         holiday_data = {
             "title": "title 1",
-            "start_date": "2023-01-18 06:41:44",
-            "end_date": "2023-01-20 06:41:44"
+            "start_date": "2023-02-18",
+            "end_date": "2023-02-20"
         }
 
         create_holiday = self.client.post(path=self.holidays_url, data=holiday_data, HTTP_AUTHORIZATION=f"Token {self.token}",
@@ -34,8 +34,8 @@ class TestViews(TestSetUp):
         self.assertEqual(get_all_holidays.status_code, 200)
 
         self.params = {
-            'start_date': '2023-01-18 06:41:44',
-            'end_date': '2023-01-20 06:41:44'
+            'start_date': '2023-02-18',
+            'end_date': '2023-02-20'
         }
 
         get_filter_holidays = self.client.get(data=self.params, path=self.holidays_url, HTTP_AUTHORIZATION=f"Token {self.token}",
