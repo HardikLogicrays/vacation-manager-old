@@ -3,5 +3,5 @@ db.sqlite3
 Dockerfile
 docker-compose.yml
 holiday_app/fixtures/
-README.md
+# README.md
 .vscode/
